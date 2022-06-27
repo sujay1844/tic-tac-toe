@@ -7,16 +7,10 @@ import (
 )
 
 func main(){
-	// Print game info
-	fmt.Println("TIC TAC TOE")
-	fmt.Println("To choose your square press a number from 1 to 9 like a numpad")
-	fmt.Println("Enter your chosen number and press enter")
-	// Wait 2 sec for user to read
-	time.Sleep(time.Duration(2000) * time.Millisecond)
 
 	// Variable initializing
 	game := [9]int{0,0,0,0,0,0,0,0,0}
-	x_turn := true
+	x_turn := first_move_randomizer()
 	var choice int
 	number_of_moves_left := 0
 	for {
@@ -174,4 +168,11 @@ func check_win(g[9]int) int{
 	if g[2] == g[4] && g[4] == g[6] && g[6] != 0 && g[2] == 2 { return 2 }
 
 	return 0
+}
+
+func first_move_randomizer() bool{
+	now := time.Now()
+	x := now.Nanosecond()
+	fmt.Println(x)
+	if x%2 == 0 { return true } else { return false }
 }
