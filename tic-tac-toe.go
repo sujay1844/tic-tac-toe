@@ -1,28 +1,75 @@
 package main
 
 import (
+	//"bufio"
 	"fmt"
+	"os"
 	"time"
 )
 
 func main(){
 	fmt.Println("TIC TAC TOE")
 	fmt.Println("To choose your square press a number from 1 to 9 like a numpad")
+	time.Sleep(time.Duration(2000) * time.Millisecond)
 	game := [9]int{0,0,0,0,0,0,0,0,0}
 	fmt.Println(game)
 	x_turn := true
+	var choice int
+	number_of_moves_left := 0
 	for {
-		// Delay 500ms between changes
-		time.Sleep(time.Duration(500) * time.Millisecond)
+		// Clear screen
+		fmt.Println("\033[H\033[2J")
+		// Print the grid
+		print_game(game)
 		if x_turn {
 			x_turn = false
-			fmt.Println("X's turn")
+			fmt.Print("X's turn: ")
+			fmt.Scan(&choice)
+			if choice >= 1 && choice <=9 {
+				if game[choice-1] == 0 {
+					game = edit_grid(game, choice-1, "X")
+				} else {
+					fmt.Println("Spot already taken. Try again")
+					time.Sleep(time.Duration(1000) * time.Millisecond)
+					x_turn = true
+				}
+			} else {
+				fmt.Println("Invalid input")
+				fmt.Println("There are only 9 squares, buddy")
+				time.Sleep(time.Duration(1000) * time.Millisecond)
+				x_turn = true
+			}
 		} else {
 			x_turn = true
-			fmt.Println("O's turn")
+			fmt.Print("O's turn: ")
+			fmt.Scan(&choice)
+			if choice >= 1 && choice <=9 {
+				if game[choice-1] == 0 {
+					game = edit_grid(game, choice-1, "O")
+				} else {
+					fmt.Println("Spot already taken. Try again")
+					time.Sleep(time.Duration(1000) * time.Millisecond)
+					time.Sleep(1)
+					x_turn = false
+				}
+			} else {
+				fmt.Println("Invalid input")
+				fmt.Println("There are only 9 squares, buddy")
+				time.Sleep(time.Duration(1000) * time.Millisecond)
+				x_turn = false
+			}
 		}
-		print_game(game)
-		//fmt.Println("\033[H\033[2J")
+
+		number_of_moves_left = 0
+		for i :=0 ; i<9 ; i++ {
+			if game[i] == 0 { number_of_moves_left += 1 }
+		}
+		if number_of_moves_left == 0 {
+			fmt.Println("\033[H\033[2J")
+			print_game(game)
+			fmt.Println("It's a tie")
+			os.Exit(0)
+		}
 	}
 }
 
@@ -37,70 +84,78 @@ func print_game(grid [9]int) {
 }
 
 func disp(n int) string{
-	if n == 0 { return " " }
 	if n == 1 { return "X" }
 	if n == 2 { return "O" }
-	return "error"
+	return " "
 }
 
-func check_win(grid [9]int) int{
+func edit_grid(grid [9]int, pos int, player string) [9]int{
+	n := 0
+	if player == "X" { n = 1 }
+	if player == "O" { n = 2 }
+	if player == " " { n = 0 }
+	grid[pos] = n
+	return grid
+}
+
+func check_win(g[9]int) int{
 	// Checking if O has won
 
 	// Checking if horizontal rows are equal
-	if (grid[0] == grid[1] && grid[1] == grid[2] && grid[2] != 0 && grid[0] == 1) {
+	if g[0] == g[1] && g[1] == g[2] && g[2] != 0 && g[0] == 1 {
 		return 1
 	}
-	if (grid[3] == grid[4] && grid[4] == grid[5] && grid[5] != 0 && grid[3] == 1) {
+	if g[3] == g[4] && g[4] == g[5] && g[5] != 0 && g[3] == 1 {
 		return 1
 	}
-	if (grid[6] == grid[7] && grid[7] == grid[8] && grid[2] != 0 && grid[6] == 1) {
+	if g[6] == g[7] && g[7] == g[8] && g[2] != 0 && g[6] == 1 {
 		return 1
 	}
 	// Checking if vertical columns are equal
-	if (grid[0] == grid[3] && grid[3] == grid[6] && grid[6] != 0 && grid[0] == 1) {
+	if g[0] == g[3] && g[3] == g[6] && g[6] != 0 && g[0] == 1 {
 		return 1
 	}
-	if (grid[1] == grid[4] && grid[4] == grid[7] && grid[7] != 0 && grid[1] == 1) {
+	if g[1] == g[4] && g[4] == g[7] && g[7] != 0 && g[1] == 1 {
 		return 1
 	}
-	if (grid[2] == grid[5] && grid[5] == grid[8] && grid[8] != 0 && grid[2] == 1) {
+	if g[2] == g[5] && g[5] == g[8] && g[8] != 0 && g[2] == 1 {
 		return 1
 	}
 	// Checking if diagonals are equal
-	if (grid[0] == grid[4] && grid[4] == grid[8] && grid[8] != 0 && grid[0] == 1) {
+	if g[0] == g[4] && g[4] == g[8] && g[8] != 0 && g[0] == 1 {
 		return 1
 	}
-	if (grid[2] == grid[4] && grid[4] == grid[6] && grid[6] != 0 && grid[2] == 1) {
+	if g[2] == g[4] && g[4] == g[6] && g[6] != 0 && g[2] == 1 {
 		return 1
 	}
 
 	//Checking if X has won
 
 	// Checking if horizontal rows are equal
-	if (grid[0] == grid[1] && grid[1] == grid[2] && grid[2] != 0 && grid[0] == 1) {
+	if g[0] == g[1] && g[1] == g[2] && g[2] != 0 && g[0] == 1 {
 		return 2
 	}
-	if (grid[3] == grid[4] && grid[4] == grid[5] && grid[5] != 0 && grid[3] == 1) {
+	if g[3] == g[4] && g[4] == g[5] && g[5] != 0 && g[3] == 1 {
 		return 2
 	}
-	if (grid[6] == grid[7] && grid[7] == grid[8] && grid[2] != 0 && grid[6] == 1) {
+	if g[6] == g[7] && g[7] == g[8] && g[2] != 0 && g[6] == 1 {
 		return 2
 	}
 	// Checking if vertical columns are equal
-	if (grid[0] == grid[3] && grid[3] == grid[6] && grid[6] != 0 && grid[0] == 1) {
+	if g[0] == g[3] && g[3] == g[6] && g[6] != 0 && g[0] == 1 {
 		return 2
 	}
-	if (grid[1] == grid[4] && grid[4] == grid[7] && grid[7] != 0 && grid[1] == 1) {
+	if g[1] == g[4] && g[4] == g[7] && g[7] != 0 && g[1] == 1 {
 		return 2
 	}
-	if (grid[2] == grid[5] && grid[5] == grid[8] && grid[8] != 0 && grid[2] == 1) {
+	if g[2] == g[5] && g[5] == g[8] && g[8] != 0 && g[2] == 1 {
 		return 2
 	}
 	// Checking if diagonals are equal
-	if (grid[0] == grid[4] && grid[4] == grid[8] && grid[8] != 0 && grid[0] == 1) {
+	if g[0] == g[4] && g[4] == g[8] && g[8] != 0 && g[0] == 1 {
 		return 2
 	}
-	if (grid[2] == grid[4] && grid[4] == grid[6] && grid[6] != 0 && grid[2] == 1) {
+	if g[2] == g[4] && g[4] == g[6] && g[6] != 0 && g[2] == 1 {
 		return 2
 	}
 	return 0
