@@ -173,6 +173,5 @@ func check_win(g[9]int) int{
 func first_move_randomizer() bool{
 	now := time.Now()
 	x := now.Nanosecond()
-	fmt.Println(x)
 	if x%2 == 0 { return true } else { return false }
 }
