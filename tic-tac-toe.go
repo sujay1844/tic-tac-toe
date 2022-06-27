@@ -8,11 +8,6 @@ import (
 func main(){
 	fmt.Println("TIC TAC TOE")
 	fmt.Println("To choose your square press a number from 1 to 9 like a numpad")
-	//game := [3][3]int{
-		//{0,0,0},
-		//{0,0,0},
-		//{0,0,0},
-	//}
 	game := [9]int{0,0,0,0,0,0,0,0,0}
 	fmt.Println(game)
 	x_turn := true
@@ -21,17 +16,34 @@ func main(){
 		time.Sleep(time.Duration(500) * time.Millisecond)
 		if x_turn {
 			x_turn = false
-			fmt.Println("\033[H\033[2J")
 			fmt.Println("X's turn")
 		} else {
 			x_turn = true
-			fmt.Println("\033[H\033[2J")
 			fmt.Println("O's turn")
 		}
+		print_game(game)
+		//fmt.Println("\033[H\033[2J")
 	}
 }
 
-func check_win(grid []int) int{
+func print_game(grid [9]int) {
+	fmt.Println("+-----+-----+-----+")
+	fmt.Println("|  " + disp(grid[0]) + "  |  " + disp(grid[1]) + "  |  " + disp(grid[2]) + "  |")
+	fmt.Println("+-----+-----+-----+")
+	fmt.Println("|  " + disp(grid[3]) + "  |  " + disp(grid[4]) + "  |  " + disp(grid[5]) + "  |")
+	fmt.Println("+-----+-----+-----+")
+	fmt.Println("|  " + disp(grid[6]) + "  |  " + disp(grid[7]) + "  |  " + disp(grid[8]) + "  |")
+	fmt.Println("+-----+-----+-----+")
+}
+
+func disp(n int) string{
+	if n == 0 { return " " }
+	if n == 1 { return "X" }
+	if n == 2 { return "O" }
+	return "error"
+}
+
+func check_win(grid [9]int) int{
 	// Checking if O has won
 
 	// Checking if horizontal rows are equal
