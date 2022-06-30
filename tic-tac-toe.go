@@ -10,62 +10,36 @@ func main(){
 
 	// Variable initializing
 	game := [9]int{0,0,0,0,0,0,0,0,0}
-	x_turn := first_move_randomizer()
-	var choice int
+	x_turn := bool_randomizer()
+	var mode_choice int
 	number_of_moves_left := 0
+
+	// Choice for single player mode
+	fmt.Println("1 for player VS computer (Beta)")
+	fmt.Println("2 for player VS player")
+	fmt.Scanln(&mode_choice)
+
+	player_is_x := bool_randomizer()
+	level := 0
+	if mode_choice == 2 {
+		fmt.Println("Select level")
+		fmt.Println("1 for easy")
+		fmt.Println("2 for medium")
+		fmt.Println("3 for hard")
+		fmt.Print("Enter your choice: ")
+		fmt.Scanln(&level)
+	}
+
 	for {
 		clrscr()
 
 		// Print the grid
 		print_game(game)
 
-		if x_turn {
-			// toggle x_turn to give to the other player
-			x_turn = false
-
-			//Taking user input
-			fmt.Print("X's turn: ")
-			fmt.Scan(&choice)
-			if choice >= 1 && choice <=9 {
-
-				// Making sure that the chosen square is empty
-				if game[choice-1] == 0 {
-					game = edit_grid(game, choice-1, "X")
-				} else {
-					fmt.Println("Spot already taken. Try again")
-					time.Sleep(time.Duration(1000) * time.Millisecond)
-					// Giving the player another chance if input was wrong
-					x_turn = true
-				}
-			} else {
-				fmt.Println("Invalid input")
-				fmt.Println("There are only 9 squares, buddy")
-				time.Sleep(time.Duration(1000) * time.Millisecond)
-				// Giving the player another chance if input was wrong
-				x_turn = true
-			}
+		if mode_choice == 2 {
+			x_turn, game  = pvp(x_turn, game)
 		} else {
-			// toggle x_turn to give to the other player
-			x_turn = true
-			fmt.Print("O's turn: ")
-			fmt.Scan(&choice)
-			if choice >= 1 && choice <=9 {
-				// Making sure that the chosen square is empty
-				if game[choice-1] == 0 {
-					game = edit_grid(game, choice-1, "O")
-				} else {
-					fmt.Println("Spot already taken. Try again")
-					time.Sleep(time.Duration(1000) * time.Millisecond)
-					// Giving the player another chance if input was wrong
-					x_turn = false
-				}
-			} else {
-				fmt.Println("Invalid input")
-				fmt.Println("There are only 9 squares, buddy")
-				time.Sleep(time.Duration(1000) * time.Millisecond)
-				// Giving the player another chance if input was wrong
-				x_turn = false
-			}
+			x_turn, game = single_player(x_turn, game, player_is_x, level)
 		}
 
 		// Counting number of moves left
@@ -157,8 +131,7 @@ func check_win(g[9]int) int{
 
 	// Checking if horizontal rows are equal
 	if g[0] == g[1] && g[1] == g[2] && g[2] != 0 && g[0] == 2 { return 2 } else
-	if g[3] == g[4] && g[4] == g[5] && g[5] != 0 && g[3] == 2 { return 2 } else
-	if g[6] == g[7] && g[7] == g[8] && g[2] != 0 && g[6] == 2 { return 2 } else
+	if g[3] == g[4] && g[4] == g[5] && g[5] != 0 && g[3] == 2 { return 2 } else if g[6] == g[7] && g[7] == g[8] && g[2] != 0 && g[6] == 2 { return 2 } else
 	// Checking if vertical columns are equal
 	if g[0] == g[3] && g[3] == g[6] && g[6] != 0 && g[0] == 2 { return 2 } else
 	if g[1] == g[4] && g[4] == g[7] && g[7] != 0 && g[1] == 2 { return 2 } else
@@ -170,8 +143,82 @@ func check_win(g[9]int) int{
 	return 0
 }
 
-func first_move_randomizer() bool{
+func bool_randomizer() bool{
 	now := time.Now()
 	x := now.Nanosecond()
 	if x%2 == 0 { return true } else { return false }
+}
+
+func pvp(x_turn bool, game[9] int) (bool, [9]int){
+	choice := 5
+	if x_turn {
+		// toggle x_turn to give to the other player
+		x_turn = false
+
+		//Taking user input
+		fmt.Print("X's turn: ")
+		fmt.Scan(&choice)
+		if choice >= 1 && choice <=9 {
+
+			// Making sure that the chosen square is empty
+			if game[choice-1] == 0 {
+				game = edit_grid(game, choice-1, "X")
+			} else {
+				fmt.Println("Spot already taken. Try again")
+				time.Sleep(time.Duration(1000) * time.Millisecond)
+				// Giving the player another chance if input was wrong
+				x_turn = true
+			}
+		} else {
+			fmt.Println("Invalid input")
+			fmt.Println("There are only 9 squares, buddy")
+			time.Sleep(time.Duration(1000) * time.Millisecond)
+			// Giving the player another chance if input was wrong
+			x_turn = true
+		}
+	} else {
+		// toggle x_turn to give to the other player
+		x_turn = true
+		fmt.Print("O's turn: ")
+		fmt.Scan(&choice)
+		if choice >= 1 && choice <=9 {
+			// Making sure that the chosen square is empty
+			if game[choice-1] == 0 {
+				game = edit_grid(game, choice-1, "O")
+			} else {
+				fmt.Println("Spot already taken. Try again")
+				time.Sleep(time.Duration(1000) * time.Millisecond)
+				// Giving the player another chance if input was wrong
+				x_turn = false
+			}
+		} else {
+			fmt.Println("Invalid input")
+			fmt.Println("There are only 9 squares, buddy")
+			time.Sleep(time.Duration(1000) * time.Millisecond)
+			// Giving the player another chance if input was wrong
+			x_turn = false
+		}
+	}
+	return x_turn, game
+}
+
+func single_player(x_turn bool, game [9]int, player_is_x bool, level int) (bool, [9]int) {
+
+	 
+
+	return x_turn, game
+}
+
+func easy(game [9]int) int{
+	// For easy mode, a random spot is chosen
+	choice := 0
+	for {
+		random_slot := now.Nanosecond()%10
+		if random_slot >=1 && random_slot <=9 {
+			if game[random_slot] == 0 {
+				choice = random_slot
+			}
+		}
+	}
+	return choice
 }
