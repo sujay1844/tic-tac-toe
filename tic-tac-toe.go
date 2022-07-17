@@ -1,3 +1,5 @@
+///usr/bin/true; exec /usr/bin/env go run "$0" "$@"
+
 package main
 
 import (
@@ -70,20 +72,19 @@ func main(){
 	}
 }
 
-// A function to print the game on the terminal along with reference grid
 func print_game(g [9]int) {
 	// Using g for grid to shorten code
 	fmt.Println("TIC TAC TOE")
 	fmt.Println("To choose your square press a number from 1 to 9 like a numpad")
 	fmt.Println("Enter your chosen number and press enter")
 	fmt.Println("					Reference")
-	fmt.Println("+-----+-----+-----+		+-----+-----+-----+")
-	fmt.Println("|  " + disp(g[0]) + "  |  " + disp(g[1]) + "  |  " + disp(g[2]) + "  |		|  1  |  2  |  3  |")
-	fmt.Println("+-----+-----+-----+		+-----+-----+-----+")
-	fmt.Println("|  " + disp(g[3]) + "  |  " + disp(g[4]) + "  |  " + disp(g[5]) + "  |		|  4  |  5  |  6  |")
-	fmt.Println("+-----+-----+-----+		+-----+-----+-----+")
-	fmt.Println("|  " + disp(g[6]) + "  |  " + disp(g[7]) + "  |  " + disp(g[8]) + "  |		|  7  |  8  |  9  |")
-	fmt.Println("+-----+-----+-----+		+-----+-----+-----+")
+	fmt.Println("╭─────┬─────┬─────╮		╭─────┬─────┬─────╮")
+	fmt.Println("│  " + disp(g[0]) + "  │  " + disp(g[1]) + "  │  " + disp(g[2]) + "  │		│  1  │  2  │  3  │")
+	fmt.Println("├─────────────────┤		├─────────────────┤")
+	fmt.Println("│  " + disp(g[3]) + "  │  " + disp(g[4]) + "  │  " + disp(g[5]) + "  │		│  4  │  5  │  6  │")
+	fmt.Println("├─────────────────┤		├─────────────────┤")
+	fmt.Println("│  " + disp(g[6]) + "  │  " + disp(g[7]) + "  │  " + disp(g[8]) + "  │		│  7  │  8  │  9  │")
+	fmt.Println("╰─────┴─────┴─────╯		╰─────┴─────┴─────╯")
 }
 
 func disp(n int) string{
